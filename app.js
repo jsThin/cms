@@ -10,6 +10,7 @@ const bodyParser = require('body-parser')
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 var apiRouter = require('./routes/api');
+const config = require("./config/config");
 
 var app = express();
 
@@ -42,8 +43,11 @@ app.use(session({
   rolling:true  //在每次请求时强行设置 cookie，这将重置 cookie 过期时间（默认：false）
 }))
 
+//绑定全局模板变量
+app.locals.adminPath=config.adminPath;
+
 app.use('/', indexRouter);
-app.use('/admin', adminRouter);
+app.use("/"+config.adminPath, adminRouter);
 app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler

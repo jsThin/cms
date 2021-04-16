@@ -20,6 +20,7 @@ router.use((req, res, next) => {
 
 const login = require("./admin/login.js")
 const nav = require("./admin/nav.js")
+const banner = require("./admin/banner.js")
 const user = require("./admin/user.js")
 const manager = require("./admin/manager.js")
 const main = require("./admin/main.js")
@@ -27,6 +28,7 @@ const main = require("./admin/main.js")
 router.use('/', main);
 router.use('/login', login);
 router.use('/nav', nav);
+router.use('/banner', banner);
 router.use('/user', user);
 router.use('/manager', manager);
 

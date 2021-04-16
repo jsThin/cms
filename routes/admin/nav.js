@@ -4,34 +4,53 @@ const NavModel = require("../../model/navModel")
 let router = express.Router();
 
 router.get('/', async function(req, res) {
-  let docs = await NavModel.find({})
-  res.send(docs);
+  let result = await NavModel.find({})
+  res.render("admin/nav/index.html", {
+    list: result
+  })
 });
 
 router.get("/add", (req, res) => {
-  let result1 = new NavModel({
-    title: "jsthin",
-    url: "www.baidu.com"
-  })
-  result.save(err => {
-    if(err) {
-      console.log(err)
-      return
-    }
-    console.log("新增导航成功")
-  })
-  res.send("新增导航页面");
+  res.render("admin/nav/add.html")
 })
 
-router.post("/doAdd", tools.multer().single("pic"), (req, res) => {
-  res.send({
-    body: req.body,
-    file: req.file
+router.post("/doAdd", async (req, res) => {
+  try {
+    let nav = new NavModel(req.body);
+    await nav.save()
+    res.redirect("/admin/nav")
+  } catch (err) {
+    res.render("admin/public/error.html", {
+      "redirectUrl": "/admin/nav/add",
+      "message": "增加数据失败"
+    })
+  }
+})
+
+router.get("/edit", async (req, res) => {
+  let id = req.query.id;
+  let result = await NavModel.find({_id: id});
+  res.render("admin/nav/edit.html", {
+    list: result[0]
   });
 })
 
-router.get("/edit", (req, res) => {
-  res.send("修改导航");
+router.post("/doEdit", async (req, res) => {
+  try {
+    await NavModel.updateOne({_id: req.body.id}, req.body)
+    res.redirect("/admin/nav")
+  } catch (error) {
+    res.render("admin/public/error.html", {
+      "redirectUrl": "/admin/nav/edit?id=" + req.body.id,
+      "message": "修改数据失败"
+    })
+  }
+})
+
+router.get("/delete", async (req, res) => {
+  let id = req.query.id;
+  await NavModel.deleteOne({_id: id});
+  res.redirect("/admin/nav")
 })
 
 module.exports = router;
