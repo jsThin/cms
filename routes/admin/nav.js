@@ -18,10 +18,10 @@ router.post("/doAdd", async (req, res) => {
   try {
     let nav = new NavModel(req.body);
     await nav.save()
-    res.redirect("/admin/nav")
+    res.redirect(`/${req.app.locals.adminPath}/nav`)
   } catch (err) {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/nav/add",
+      "redirectUrl": `/${req.app.locals.adminPath}/nav/add`,
       "message": "增加数据失败"
     })
   }
@@ -38,10 +38,10 @@ router.get("/edit", async (req, res) => {
 router.post("/doEdit", async (req, res) => {
   try {
     await NavModel.updateOne({_id: req.body.id}, req.body)
-    res.redirect("/admin/nav")
+    res.redirect(`/${req.app.locals.adminPath}/nav`)
   } catch (error) {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/nav/edit?id=" + req.body.id,
+      "redirectUrl": `/${req.app.locals.adminPath}/nav/edit?id=` + req.body.id,
       "message": "修改数据失败"
     })
   }
@@ -50,7 +50,7 @@ router.post("/doEdit", async (req, res) => {
 router.get("/delete", async (req, res) => {
   let id = req.query.id;
   await NavModel.deleteOne({_id: id});
-  res.redirect("/admin/nav")
+  res.redirect(`/${req.app.locals.adminPath}/nav`)
 })
 
 module.exports = router;

@@ -12,7 +12,7 @@ router.use((req, res, next) => {
     // if(pathname === "/login" || pathname === "/login/dologin" || pathname === "/login/verify" || pathname === "/login/logout") {
     //   next()
     // } else {
-    //   res.redirect("/admin/login");
+    //   res.redirect(`/${req.app.locals.adminPath}/login`);
     // }
     next()
   }

@@ -15,7 +15,7 @@ router.post("/dologin", async (req, res) => {
 
   if(verify.toLocaleLowerCase() !== req.session.captcha.toLocaleLowerCase()) {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/login",
+      "redirectUrl": `/${req.app.locals.adminPath}/login`,
       "message": "图形验证码输入错误!"
     })
     return
@@ -25,12 +25,12 @@ router.post("/dologin", async (req, res) => {
   if (result.length > 0) {
     req.session.userInfo = result[0];
     res.render("admin/public/success.html", {
-      "redirectUrl": "/admin",
+      "redirectUrl": `/${req.app.locals.adminPath}`,
       "message": "登录成功!"
     })
   } else {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/login",
+      "redirectUrl": `/${req.app.locals.adminPath}/login`,
       "message": "用户名或密码错误!"
     })
   }
@@ -48,7 +48,7 @@ router.get('/verify', function (req, res) {
 
 router.get('/logout', function (req, res) {
   req.session.userInfo = null;
-  res.redirect("/admin/login")
+  res.redirect(`/${req.app.locals.adminPath}/login`)
 });
 
 module.exports = router;

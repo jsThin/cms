@@ -5,6 +5,7 @@ $(function () {
 
 var app = {
 
+	adminPath:"admin_express",
 	init() {
 		this.toggleAside();
 		this.deleteConfirm();
@@ -33,12 +34,13 @@ var app = {
 		})
 	},
 	changeStatus: function () {
+		let adminPath = this.adminPath
 		$(".chStatus").click(function() {
 			var id = $(this).attr("data-id");
 			var model = $(this).attr("data-model");
 			var field = $(this).attr("data-field");
 			var el = $(this);
-			$.get("/admin/changeStatus",{id: id, model: model, field: field}, function(res) {
+			$.get(`/${adminPath}/changeStatus`,{id: id, model: model, field: field}, function(res) {
 				console.log(res)
 				if(res.success) {
 					if(el.attr("src").indexOf("yes") !== -1) {
@@ -78,6 +80,7 @@ var app = {
 				
 			})
 		*/
+		let adminPath = this.adminPath
 		$(".chSpanNum").click(function(){
 
 			var id=$(this).attr("data-id");
@@ -99,7 +102,7 @@ var app = {
 					spanEl.html(0);
 				}
 				//触发请求
-				$.get("/admin/changeNum",{id:id,model:model,field:field,num:inputNum},function(response){				
+				$.get(`/${adminPath}/changeNum`,{id:id,model:model,field:field,num:inputNum},function(response){				
 					if(!response.success){
 						console.log(response)
 					}

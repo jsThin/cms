@@ -25,21 +25,21 @@ router.post("/doAdd", async (req, res) => {
   // 校验数据合法性
   if(username === "") {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/manager/add",
+      "redirectUrl": `/${req.app.locals.adminPath}/manager/add`,
       "message": "用户名不能为空"
     })
     return;
   }
   if(password.length < 6) {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/manager/add",
+      "redirectUrl": `/${req.app.locals.adminPath}/manager/add`,
       "message": "密码不能少于6位"
     })
     return;
   }
   if(password !== rpassword) {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/manager/add",
+      "redirectUrl": `/${req.app.locals.adminPath}/manager/add`,
       "message": "密码和确认密码不一致"
     })
     return;
@@ -49,7 +49,7 @@ router.post("/doAdd", async (req, res) => {
   let result = await ManagerModel.find({username: username})
   if(result.length > 0) {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/manager/add",
+      "redirectUrl": `/${req.app.locals.adminPath}/manager/add`,
       "message": "该用户名已被注册"
     })
     return;
@@ -64,7 +64,7 @@ router.post("/doAdd", async (req, res) => {
     addtime: getUnix()
   });
   await user.save();
-  res.redirect("/admin/manager");
+  res.redirect(`/${req.app.locals.adminPath}/manager`);
 })
 
 router.get("/edit", async (req, res) => {
@@ -75,7 +75,7 @@ router.get("/edit", async (req, res) => {
       manger: result[0]
     })
   } else {
-    res.redirect("/admin/manager");
+    res.redirect(`/${req.app.locals.adminPath}/manager`);
   }
 })
 
@@ -90,14 +90,14 @@ router.post("/doEdit", async (req, res) => {
   if(password.length > 0) {
     if(password.length < 6) {
       res.render("admin/public/error.html", {
-        "redirectUrl": "/admin/manager/edit?id="+id,
+        "redirectUrl": `/${req.app.locals.adminPath}/manager/edit?id=`+id,
         "message": "密码不能少于6位"
       })
       return;
     }
     if(password !== rpassword) {
       res.render("admin/public/error.html", {
-        "redirectUrl": "/admin/manager/edit?id="+id,
+        "redirectUrl": `/${req.app.locals.adminPath}/manager/edit?id=`+id,
         "message": "密码和确认密码不一致"
       })
       return;
@@ -115,13 +115,13 @@ router.post("/doEdit", async (req, res) => {
       "status": status
     })
   }
-  res.redirect("/admin/manager")
+  res.redirect(`/${req.app.locals.adminPath}/manager`)
 })
 
 router.get("/delete", async (req, res) => {
   let id = req.query.id
   await ManagerModel.deleteOne({"_id": id})
-  res.redirect("/admin/manager")
+  res.redirect(`/${req.app.locals.adminPath}/manager`)
 })
 
 module.exports = router;

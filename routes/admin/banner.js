@@ -19,10 +19,10 @@ router.post("/doAdd", tools.multer().single('banner_img'), async (req, res) => {
     let banner_img = req.file ? req.file.path.substr(7) : "";
     let banner = new BannerModel(Object.assign(req.body, { "banner_img": banner_img }));
     await banner.save()
-    res.redirect("/admin/banner")
+    res.redirect(`/${req.app.locals.adminPath}/banner`)
   } catch (err) {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/banner/add",
+      "redirectUrl": `/${req.app.locals.adminPath}/banner/add`,
       "message": "增加数据失败"
     })
   }
@@ -44,10 +44,10 @@ router.post("/doEdit", tools.multer().single('banner_img'), async (req, res) => 
     } else {
       await BannerModel.updateOne({_id: req.body.id}, req.body)
     }
-    res.redirect("/admin/banner")
+    res.redirect(`/${req.app.locals.adminPath}/banner`)
   } catch (error) {
     res.render("admin/public/error.html", {
-      "redirectUrl": "/admin/banner/edit?id=" + req.body.id,
+      "redirectUrl": `/${req.app.locals.adminPath}/banner/edit?id=` + req.body.id,
       "message": "修改数据失败"
     })
   }
@@ -56,7 +56,7 @@ router.post("/doEdit", tools.multer().single('banner_img'), async (req, res) => 
 router.get("/delete", async (req, res) => {
   let id = req.query.id;
   await BannerModel.deleteOne({_id: id});
-  res.redirect("/admin/banner")
+  res.redirect(`/${req.app.locals.adminPath}/banner`)
 })
 
 module.exports = router;
