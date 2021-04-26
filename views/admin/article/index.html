@@ -1,0 +1,52 @@
+<%- include("../public/page_header.html"); %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <a href="/<%=adminPath%>/article/add" class="btn btn-primary">增加内容</a>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <tr class="th">
+          <th>名称</th>
+          <th>分类</th>
+          <th>图片</th>             
+          <th class="text-center">排序</th>
+          <th class="text-center">状态</th>
+          <th class="text-center">操作</th>
+        </tr>
+        <%for(var i=0;i<list.length;i++){%>
+          <tr>
+            <td>
+              <%=list[i].title%>
+            </td>
+            <td>
+              显示分类
+
+            </td>
+            <td>
+              <%if(list[i].article_img){%>
+                <img src="/<%=list[i].article_img%>" width="80" />
+                <%}%>
+            </td>
+            <td class="text-center">
+              <span class="chSpanNum" data-id="<%=list[i]._id%>" data-model="ArticleModel" data-field="sort">
+                <%=list[i].sort%>
+              </span>
+              </span>
+            </td>
+            <td align="center">
+              <%if(list[i].status==1){%>
+                <img src="/admin/images/yes.gif" class="chStatus" data-id="<%=list[i]._id%>" data-model="ArticleModel"
+                  data-field="status" />
+                <%}else{%>
+                  <img src="/admin/images/no.gif" class="chStatus" data-id="<%=list[i]._id%>" data-model="ArticleModel"
+                    data-field="status" />
+                  <%}%>
+            </td>
+            <td class="text-center"><a href="/<%=adminPath%>/article/edit?id=<%=list[i]._id%>">修改</a>　　
+              <a class="delete" href="/<%=adminPath%>/article/delete?id=<%=list[i]._id%>">删除</a>
+            </td>
+          </tr>
+          <%}%>
+      </table>
+    </div>
+  </div>

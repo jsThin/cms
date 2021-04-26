@@ -24,6 +24,8 @@ const banner = require("./admin/banner.js")
 const user = require("./admin/user.js")
 const manager = require("./admin/manager.js")
 const main = require("./admin/main.js")
+const articleCate = require("./admin/articleCate.js")
+const article = require("./admin/article.js")
 
 router.use('/', main);
 router.use('/login', login);
@@ -31,5 +33,7 @@ router.use('/nav', nav);
 router.use('/banner', banner);
 router.use('/user', user);
 router.use('/manager', manager);
+router.use('/articleCate', articleCate);
+router.use('/article', article);
 
 module.exports = router;

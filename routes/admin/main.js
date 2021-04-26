@@ -3,8 +3,9 @@ let router = express.Router();
 const BannerModel = require("../../model/bannerModel")
 const NavModel = require("../../model/navModel");
 const ManagerModel = require("../../model/managerModel");
+const ArticleCateModel = require("../../model/articleCateModel");
 
-const appModel = { BannerModel, NavModel, ManagerModel };
+const appModel = { BannerModel, NavModel, ManagerModel, ArticleCateModel };
 
 router.get('/', function(req, res) {
   res.render("admin/main/index.html")
@@ -18,7 +19,7 @@ router.get('/changeStatus', async function(req, res) {
   let id = req.query.id;
   let model = req.query.model;
   let field = req.query.field;
-
+  console.log(model)
   let params;
   let result = await appModel[model].find({ "_id": id});
   if(result.length > 0) {

@@ -83,9 +83,12 @@ var app = {
 		let adminPath = this.adminPath
 		$(".chSpanNum").click(function(){
 
+			
+
 			var id=$(this).attr("data-id");
 			var model=$(this).attr("data-model");
 			var field=$(this).attr("data-field");
+			console.log(model)
 			var spanEl=$(this);
 			var spanNum=$(this).html();
 			var input=$("<input value='' style='width:60px'/> ");			
