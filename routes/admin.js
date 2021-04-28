@@ -26,6 +26,7 @@ const manager = require("./admin/manager.js")
 const main = require("./admin/main.js")
 const articleCate = require("./admin/articleCate.js")
 const article = require("./admin/article.js")
+const setting = require("./admin/setting.js")
 
 router.use('/', main);
 router.use('/login', login);
@@ -35,5 +36,6 @@ router.use('/user', user);
 router.use('/manager', manager);
 router.use('/articleCate', articleCate);
 router.use('/article', article);
+router.use('/setting', setting);
 
 module.exports = router;

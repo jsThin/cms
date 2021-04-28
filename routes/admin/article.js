@@ -1,13 +1,42 @@
 const express = require("express");
 const ArticleModel = require("../../model/articleModel");
 const ArticleCateModel = require("../../model/articleCateModel");
-const tools = require("../../model/tools.js")
+const tools = require("../../model/tools.js");
+const { getUnix } = require("../../model/tools.js");
 let router = express.Router();
 
 router.get("/", async (req, res) => {
-  let result = await ArticleModel.find({})
+  let page = req.query.page || 1;
+  let pageSize = 2;
+  // let result = await ArticleModel.find({}).skip((page-1)*pageSize).limit(pageSize);
+  let json = {}
+  let result = await ArticleModel.aggregate([
+    {
+      $lookup: {
+        from: "article_cate",
+        localField: "cid",
+        foreignField: "_id",
+        as: "cate"
+      }
+    },
+    {
+      $match: json
+    },
+    {
+      $sort: { "add_time": -1 }
+    },
+    {
+      $skip: (page-1)*pageSize
+    },
+    {
+      $limit: pageSize
+    }
+  ])
+  let count = await ArticleModel.find({}).count()
   res.render("admin/article/index.html", {
-    list: result
+    list: result,
+    count: Math.ceil(count / pageSize),
+    page: page
   })
 })
 
@@ -35,7 +64,7 @@ router.get("/add", async (req, res) => {
 
 router.post("/doAdd", tools.multer().single('article_img'), async (req, res) => {
   let article_img = req.file ? req.file.path.substr(7) : ""
-  let result = new ArticleModel(Object.assign(req.body, { article_img: article_img }))
+  let result = new ArticleModel(Object.assign(req.body, { article_img: article_img }, { add_time: getUnix()}))
   await result.save()
   res.redirect(`/${req.app.locals.adminPath}/article`)
 })

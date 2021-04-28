@@ -1,6 +1,7 @@
 const express = require("express");
 const { getUnix } = require("../../model/tools");
 const ArticleCateModel = require("../../model/articleCateModel");
+const ArticleModel = require("../../model/articleModel");
 const mongoose = require("mongoose");
 let router = express.Router();
 
@@ -34,7 +35,7 @@ router.get("/add", async (req, res) => {
 })
 
 router.post("/doAdd", async (req, res) => {
-  if(req.body.pid !== "0") {
+  if (req.body.pid !== "0") {
     req.body.pid = mongoose.Types.ObjectId(req.body.pid);
   }
   req.body.add_time = getUnix();
@@ -45,8 +46,8 @@ router.post("/doAdd", async (req, res) => {
 
 router.get("/edit", async (req, res) => {
   let id = req.query.id;
-  let list = await ArticleCateModel.find({_id: id})
-  
+  let list = await ArticleCateModel.find({ _id: id })
+
   // 获取顶级分类
   let topCateList = await ArticleCateModel.find({ pid: "0" })
   res.render("admin/articleCate/edit.html", {
@@ -56,28 +57,37 @@ router.get("/edit", async (req, res) => {
 })
 
 router.post("/doEdit", async (req, res) => {
-  if(req.body.pid !== "0") {
+  if (req.body.pid !== "0") {
     req.body.pid = mongoose.Types.ObjectId(req.body.pid);
   }
-  await ArticleCateModel.updateOne({_id: req.body.id}, req.body)
+  await ArticleCateModel.updateOne({ _id: req.body.id }, req.body)
   res.redirect(`/${req.app.locals.adminPath}/articleCate`)
 })
 
 router.get("/delete", async (req, res) => {
-  let id = req.query.id;
-  // 查询是否有pid是当前分类的id的分类，有则不删除
-  let subResult = ArticleCateModel.find({pid: mongoose.Types.ObjectId(id)})
-  if (subResult.length > 0) {
+  var id = req.query.id;
+  var subReuslt = await ArticleCateModel.find({ "pid": mongoose.Types.ObjectId(id) });
+  if (subReuslt.length > 0) {
     res.render("admin/public/error.html", {
       "redirectUrl": `/${req.app.locals.adminPath}/articleCate`,
       "message": "当前分类没法删除，请删除下面的子分类后重试"
     })
   } else {
-    await ArticleCateModel.deleteOne({_id: id})
-    res.render("admin/public/success.html", {
-      "redirectUrl": `/${req.app.locals.adminPath}/articleCate`,
-      "message": "删除成功"
-    })
+
+    var subArticelReuslt = await ArticleModel.find({ "cid": mongoose.Types.ObjectId(id) });
+    if (subArticelReuslt.length > 0) {
+      res.render("admin/public/error.html", {
+        "redirectUrl": `/${req.app.locals.adminPath}/articleCate`,
+        "message": "当前分类下面有文章信息没法删除，删除文章后重试"
+      })
+    } else {
+      // await ArticleCateModel.deleteOne({ "_id": id });
+      res.render("admin/public/success.html", {
+        "redirectUrl": `/${req.app.locals.adminPath}/articleCate`,
+        "message": "删除数据成功"
+      })
+    }
+
   }
 })
 

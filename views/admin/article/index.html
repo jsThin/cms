@@ -19,7 +19,9 @@
               <%=list[i].title%>
             </td>
             <td>
-              显示分类
+              <%if(list[i].cate){%>
+                <%=list[i].cate[0].title%>
+              <%}%>
 
             </td>
             <td>
@@ -50,3 +52,18 @@
       </table>
     </div>
   </div>
+  <div class="pagination" id="pagination"></div>
+  <script type="text/javascript" src="/admin/js/jqPaginator.js"></script>
+  
+  <script>
+  $('#pagination').jqPaginator({
+      totalPages: <%=count%>,
+      visiblePages: 5,
+      currentPage: <%=page%>,
+      onPageChange: function (num, type) {
+        if(type == "change") {
+          location.href = "/<%=adminPath%>/article?page="+num
+        }
+      }
+  });
+  </script>
